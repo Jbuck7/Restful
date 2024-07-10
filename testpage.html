@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>API Test Page</title>
+  </head>
+  <body>
+    <button id="get-headshot">Get Headshot</button>
+    <button id="get-resume">Get Resume</button>
+    <button id="get-text">Get Text</button>
+
+    <div id="response"></div>
+
+    <script>
+      const headshotButton = document.getElementById("get-headshot");
+      const resumeButton = document.getElementById("get-resume");
+      const textButton = document.getElementById("get-text");
+      const responseDiv = document.getElementById("response");
+
+      headshotButton.addEventListener("click", fetchHeadshot);
+      resumeButton.addEventListener("click", fetchResume);
+      textButton.addEventListener("click", fetchText);
+
+      function fetchHeadshot() {
+        fetch("http://localhost:3000/headshot")
+          .then((response) => response.blob())
+          .then((data) => {
+            const imageUrl = URL.createObjectURL(data);
+            const image = document.createElement("img");
+            image.src = imageUrl;
+            responseDiv.innerHTML = "";
+            responseDiv.appendChild(image);
+          });
+      }
+
+      function fetchResume() {
+        fetch("http://localhost:3000/resume")
+          .then((response) => response.blob())
+          .then((data) => {
+            const pdfUrl = URL.createObjectURL(data);
+            const pdfFrame = document.createElement("embed");
+            pdfFrame.src = pdfUrl;
+            pdfFrame.width = "800";
+            pdfFrame.height = "600";
+            responseDiv.innerHTML = "";
+            responseDiv.appendChild(pdfFrame);
+          });
+      }
+
+      function fetchText() {
+        fetch("http://localhost:3000/text")
+          .then((response) => response.text())
+          .then((data) => {
+            responseDiv.innerText = data;
+          });
+      }
+    </script>
+  </body>
+</html>
